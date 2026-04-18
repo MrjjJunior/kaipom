@@ -1,0 +1,6 @@
+def user_input():
+    user_input = input("Enter your pomodoro timer and how long for in the format [mm/bm hh]\n where mm is how many minutes and bm is how long your break will be in minutes and hh is how long in hours you want the overall study session to be: ")
+    try:
+        ...
+    except ValueError:
+        ...
