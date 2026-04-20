@@ -1,0 +1,5 @@
+{
+    "date": "18-April-2026",
+    "study_duration": "50 Minutes",
+    "notes": "Testing out formats. %B gives you the month (e.g June instead of the number 6) when you use the method strftime."
+}

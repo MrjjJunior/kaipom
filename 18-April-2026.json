@@ -1,5 +1,0 @@
-{
-    "date": "18-April-2026",
-    "study_duration": 1,
-    "notes": "What have you learnt so far? Testing out formats. %B gives you the month when you use strftime."
-}

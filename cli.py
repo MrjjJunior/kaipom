@@ -13,7 +13,7 @@ def parsing_ama_argument():
     parser_study = subparsers.add_parser('study', help = 'Pomodoro study duration. 25 or 50.')
 
     parser_study.add_argument('minutes', type = int, choices = [25,50,1], help= 'Choose a study time between 25 (Minutes) or 50 (Minutes)')
-    parser_study.add_argument('--hour', type = int, choices = [1,2,3,4,5,6], help = 'How long the entire study sessions duration will be for.')
+    parser_study.add_argument('--hour', default = 1, type = int, choices = [1,2,3,4,5,6], help = 'How long the entire study sessions duration will be for.')
 
     # NOTES
 
@@ -22,6 +22,14 @@ def parsing_ama_argument():
     parser_notes.add_argument('--notes', type = str, help = 'See your notes from a specific date or look at them holistically to see what you\'ve learnt.')
 
     args = parser.parse_args()  # creates them all for us and stores it into the args variable
+
+    # QUIZ using RAG
+
+    parser_notes = subparsers.add_parser('quiz', help = 'Generate a quiz based on what you\'ve learnt so far.')
+
+    parser_notes.add_argument('--random', type = str, help = 'See your notes from a specific date or look at them holistically to see what you\'ve learnt.')
+
+    args = parser.parse_args() 
 
     return args
 

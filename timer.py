@@ -1,56 +1,81 @@
 import time
 from datetime import datetime
 import sys
-
-def overall_study_duration_count_down(study_hour: int) -> str:
-
-    """This is the overall BIG Clock keeping track of how long I'm studying for overall."""
-    
-    hours_completed = study_hour 
-
-    study_hour = (60*60)*(study_hour) # I'm converting my hour(s) submitted into seconds.
+from tqdm import trange # tqdm stands for progress in arabic
+from rich.progress import Progress, track
 
 
-    while study_hour:
-        try:
 
-            mins, secs = divmod(study_hour, 60) # divmod returns quotient and remainder of the division of the first argument with the second. Returns a tuple.
-            hours, mins = divmod(mins, 60)
-            study_timer = f'{hours:02d}:{mins:02d}:{secs:02d}'
-            
-            print("Time Left:",study_timer, end='\r', flush = True)  # Overwrite the line each second by putting cursor back to the beginning of the line.
-            
-            time.sleep(1) # Creates 1 second delay
-
-            study_hour -= 1
-
-        except EOFError:
-            
-            sys.exit(1)
-
-    return hours_completed
-
-
-def countdown_timer(t_seconds: int) -> str:
+def countdown_timer(t_seconds, t_session) -> str:
 
     """Count down Pomodoro section of my code"""
 
+
+    if t_seconds == 25:
+        study_break = 5*60
+    else:
+        study_break = 1*60
+
+
+    t_session = (t_session*60) #Total study duration
+
     t_minutes = (t_seconds * 60) # Convert the minutes I'll receive into seconds
-    
+    v = t_minutes
+
+    # while t_session:
+
+    #     total_mins, total_secs = divmod(t_session, 60) # divmod returns quotient and remainder of the division of the first argument with the second. Returns a tuple.
+        
+    #     total_hours, total_mins = divmod(total_mins, 60)
+    #     study_timer = f'{total_hours:02d}:{total_mins:02d}:{total_secs:02d}'
+            
+    #     print("Time Left:",study_timer, end='\r', flush = True)  # Overwrite the line each second by putting cursor back to the beginning of the line.
+        
+    #     time.sleep(1) # Creates 1 second delay
+
+    #     t_session -= 1
+
     while t_minutes:
-        mins, secs = divmod(t_minutes, 60) # divmod returns quotient and remainder of the division of the first argument with the second. Returns a tuple.
-        timer = '{:02d}:{:02d}'.format(mins, secs) 
-        
-        print(timer, end='\r')  # Overwrite the line each second by putting cursor back to the beginning of the line.
-        
-        time.sleep(1)
+        for i in track(range(t_minutes,0,-1), description= "25/5 Pomodoro in progress"):
 
-        t_minutes -= 1
+            # mins, secs = divmod(t_minutes, 60) # divmod returns quotient and remainder of the division of the first argument with the second. Returns a tuple.
+            # timer = '{:02d}:{:02d}'.format(mins, secs) 
+            
+            # print("Time Left:", timer, end='\r')  # Overwrite the line each second by putting cursor back to the beginning of the line.
+            t_minutes-=1
+            time.sleep(1) 
 
-    print("End of session.")
+            # with Progress() as p:
+            #     t= p.add_task("Pomodoro 25/5", total = 0)
+            #     while not p.finished:
+            #         p.update(t, advance = 1)
+
+            #         time.sleep(0.05)
+
+
+            
+
+            
     
-    notes = input("What have you learnt so far? ") # I want to store these notes in a json/ csv file. 
+    print("End of session. ")
 
-    return notes
+    
+    
+    notes = input("What have you learnt so far? ")  # I want to store these notes in a json/ csv file. 
 
-# countdown_timer(int(minutes))
+    print("")
+
+    while study_break:
+        for i in track(range(study_break,0,-1), description="Break (Phumula): "):
+        
+            # break_mins, break_secs = divmod(study_break, 60) # divmod returns quotient and remainder of the division of the first argument with the second. Returns a tuple.
+            # timer = '{:02d}:{:02d}'.format(break_mins, break_secs) 
+            
+            # print("Break (Phumula): ", timer, end='\r')  # Overwrite the line each second by putting cursor back to the beginning of the line.
+            
+            time.sleep(1) 
+
+            study_break -= 1
+        
+
+    return notes 
