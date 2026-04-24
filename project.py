@@ -1,18 +1,19 @@
 """Lena iMain file yam' essentially and is where everything will run."""
 
-from cli import parsing_ama_argument
-from timer import countdown_timer
+# from cli import parsing_ama_argument
+# from timer import countdown_timer
+from rich.progress import Progress, track
+
 from datetime import datetime
 import json
 import time
 from pathlib import Path
-from tabulate import tabulate
 from rich import print
 from rich.markdown import Markdown
 from rich.console import Console
-
-
-
+from rich.progress import Progress
+from rich.progress import BarColumn,TimeRemainingColumn
+import argparse
 
 console =  Console()
 
@@ -28,13 +29,19 @@ def main():
         print("")
         
         heading = """# Study Session"""
+        current_date = f"### {date_formatter()}"
+        current_date = Markdown(current_date)
+
         mark_down = Markdown(heading)
         line = "_"
    
         console.print(mark_down)
-      
+
+        print("")
+        console.print(current_date)
+        print("")
         print(f"Pomodoro: {args.minutes} minutes") 
-        print(f"Total Session: {args.hour} hour(s)")
+        # print(f"Total Session: {args.hour} hour(s)")
     
         if args.minutes != 25:
             print(f"Break duration: 10 Minutes")
@@ -82,11 +89,11 @@ def notes_table():
     print("")
     heading = """# Study Log """
 
-
     md = Markdown(heading)
     console.print(md)
 
     notes_folder = Path('/Users/amahlecele/Desktop/kaipom/notes').iterdir()
+
     for file in notes_folder:
         with open(f"{str(file)}","r") as f:
             data = json.load(f)
@@ -109,7 +116,8 @@ def notes_table():
                             print(word, end = " ")
 
                             count = 0  
-                            count+=1            
+                            count+=1        
+                                
                 elif k == "date":
                     date_pretty = v.split("-")
                     date_pretty = " ".join(date_pretty)
@@ -124,9 +132,127 @@ def notes_table():
         print("")
 
 
-def function_n():
-    ...
+def countdown_timer(t_seconds, t_session) -> str:
 
+    """Count down Pomodoro section of my code"""
+
+    session_counter = 0
+
+    start = time.monotonic() # My reference point when the timer start to keep track of total passed seconds
+    print("Time left: ") 
+    if t_seconds == 25:
+        study_break = 5*60
+        # session_counter = 2
+    else:
+        study_break = 1*60
+
+    try: 
+        t_session = (t_session*60*60) #Total study duration
+
+        t_minutes = (t_seconds * 60) # Convert the minutes I'll receive into seconds
+    except ValueError:
+        print("Only integers are allowed!")
+    
+    # while t_session >= 0:
+
+
+
+    with Progress(BarColumn(),TimeRemainingColumn()) as progress: # With will close the progress bar once I'm done with it automatically
+
+        study_session = progress.add_task( total=t_minutes,description="Pomodoro in session",)
+        
+        while True:
+            elapsed = time.monotonic() - start # How many seconds has it been?
+            if elapsed >= t_minutes:
+                progress.update(study_session, completed=t_minutes) 
+                break
+            
+            progress.update(study_session, completed=elapsed)
+            t_session -= elapsed
+            time.sleep(0.1)      
+            
+    print("TIME LEFT: ", t_session)
+
+    console.print("End of session. ")
+    print("")
+    
+    notes = input("What have you learnt so far? ")  # I want to store these notes in a json/ csv file. 
+
+    print("")
+
+    start_break= time.monotonic()
+    print("Break (Phumula): ") 
+
+    with Progress(BarColumn(),TimeRemainingColumn()) as progress_break: # With will close the progress bar once I'm done with it automatically
+
+        break_session = progress_break.add_task(description="Break in progress", total=study_break)
+        
+        while True:
+            elapsed = time.monotonic() - start_break # How many seconds has it been?
+            if elapsed >= t_minutes:
+                progress_break.update( break_session, completed=t_minutes) 
+                break
+            
+            progress_break.update(break_session, completed=elapsed)
+            time.sleep(0.1)      
+
+
+    # STUDY BREAK 
+
+        
+        break_mins, break_secs = divmod(study_break, 60) # divmod returns quotient and remainder of the division of the first argument with the second. Returns a tuple.
+        timer = '{:02d}:{:02d}'.format(break_mins, break_secs) 
+        
+        print("Break (Phumula): ", timer, end='\r')  # Overwrite the line each second by putting cursor back to the beginning of the line.
+        
+        # time.sleep(1) 
+
+        # study_break -= 1
+        
+    return notes 
+
+def parsing_ama_argument(args = None):
+     
+    parser = argparse.ArgumentParser(description = 'Study tool that helps me study using the Pomodoro Technique') # This instantiates the ArgumentParser class
+    subparsers = parser.add_subparsers(dest = 'command') # dest is where the value of the argument is found using dot notation
+
+    # STUDY TIME (25/50)
+
+    parser_study = subparsers.add_parser('study', help = 'Pomodoro study duration. 25 or 50.')
+
+    parser_study.add_argument('minutes', type = int, choices = [25,50,1], help= 'Choose a study time between 25 (Minutes) or 50 (Minutes)')
+    parser_study.add_argument('--hour', default = 1, type = int, choices = [1,2,3,4,5,6], help = 'How long the entire study sessions duration will be for.')
+
+    # NOTES
+
+    parser_notes = subparsers.add_parser('notes', help = 'Take a look at your past study notes.')
+
+    parser_notes.add_argument('--notes', type = str, help = 'See your notes from a specific date or look at them holistically to see what you\'ve learnt.')
+
+      # creates them all for us and stores it into the args variable
+
+    # QUIZ using RAG
+
+    # parser_notes = subparsers.add_parser('quiz', help = 'Generate a quiz based on what you\'ve learnt so far.')
+
+    # parser_notes.add_argument('--random', type = str, help = 'See your notes from a specific date or look at them holistically to see what you\'ve learnt.')
+
+    # args = parser.parse_args() 
+
+    return parser.parse_args(args)
+
+
+# """Should I use OOP for this? I think so."""
+
+# """I need to figure out a way to trigger a seperate Hour long study session in Hours, similar to the mini timer."""
+
+# """Code to store my notes in a csv or json file. And code to load it up into my terminal."""
+
+
+
+
+
+    
 
 if __name__ == "__main__":
     main()

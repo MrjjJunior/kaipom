@@ -1,6 +1,6 @@
 {
     "date": "18-April-2026",
-    "study_duration": "25 Minutes",
-    "start_time": "18:23",
-    "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu magna id orci auctor masuada eget in est. Morbi aliquet velit tempus aliquam facilisis. Suspendisse quis ipsum laoreet sem feugiat pretium. Morbi urna diam, dunt non metus ac, dapibus venenatis lacus. In molestie, orci sed ornare tinnt, metus eros pellentesque erat, congue sollicitudin est tellus ut nisl. Nulla eu fringilla metus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis rutrum risus at egestas tristique. Vivamus gravida sapien id tellus condimentum ultricies. Aquam erat volutpat. Suspee sncidunt fringilla. Duis vulputate fringilla tincidunt."
+    "study_duration": "25 minutes",
+    "start_time": "19:30",
+    "notes": "Learned about list comprehensions: [x*2 for x in range(10)] is cleaner than map(). Also understood that list comprehensions are faster than loops for simple transformations."
 }
