@@ -17,10 +17,10 @@ console =  Console()
 def main():
     
     namhlanje = date_formatter() # I'll use this date to later catalogue in my json file
-    manje = datetime.now()
+    start_time = datetime.now()
 
     args = parsing_ama_argument()
-    start_time = manje.strftime("%R") # %R Shorthand for digital format.
+    start_time = start_time.strftime("%R") # %R Shorthand for digital format.
 
     if args.command == 'study':
         print("")
@@ -56,8 +56,10 @@ def main():
             """Main Pomodoro Study Loop"""
             
             notes = countdown_timer(args.minutes, args.hour)
+            end_time = datetime.now()
+            end_time = end_time.strftime("%R")
             
-            study_session_dict = {"date": str(namhlanje), "study_duration": f"{args.minutes} minutes", "start_time": start_time, "notes": notes}
+            study_session_dict = {"date": str(namhlanje), "study_duration": f"{args.minutes} minutes", "start_time": start_time, "end_time": end_time, "notes": notes}
             uniq_json = f"{namhlanje}"
 
             with open(f"/Users/amahlecele/Desktop/kaipom/notes/{uniq_json}-{start_time}.json", "w") as file: # Storing the files in the notes folder
@@ -161,7 +163,6 @@ def countdown_timer(pomodoro_minutes, total_study_session_hours) -> str:
                 break
             
             progress.update(study_session, completed=elapsed)
-            # t_session -= elapsed
             time.sleep(0.1)      
             
 
@@ -186,7 +187,6 @@ def countdown_timer(pomodoro_minutes, total_study_session_hours) -> str:
                 break
             
             progress_break.update(break_session, completed=elapsed)
-            # study_break -= elapsed
             time.sleep(0.1)      
     
     console.print("Goodbye!")
