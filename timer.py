@@ -68,18 +68,16 @@ class Timer:
                 break_session = progress_break.add_task(description= "Break in progress", total=study_break)
                 
                 while True:
-                    elapsed = time.monotonic() - start_break # How many seconds has it been?
-                    if elapsed >= study_break:
+                    elapsed_time = time.monotonic() - start_break # How many seconds has it been?
+                    if (elapsed_time >= study_break):
                         progress_break.update( break_session, completed = study_break) 
                         break
                     
-                    progress_break.update(break_session, completed=elapsed)
-                    time.sleep(0.1)      
+                    progress_break.update(break_session, completed=elapsed_time)
+                    time.sleep(0.1)   
+
+            console.print(f"Goodbye!")   
             
         except EOFError:
             console.print("You've terminated your break. Goodbye!")
         
-        return f"Goodbye!"
-
-
-    
