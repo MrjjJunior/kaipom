@@ -1,57 +1,83 @@
-# import time
-# from datetime import datetime
-# import sys
-# from tqdm import trange # tqdm stands for progress in arabic
-# from rich.progress import Progress, track
-# from rich import print
-# from rich.markdown import Markdown
-# from rich.console import Console
-# from rich.progress import BarColumn,TimeRemainingColumn
+import time
+from tqdm import trange # tqdm stands for progress in arabic
+from rich.progress import Progress, track
+from rich import print
+from rich.markdown import Markdown
+from rich.console import Console
+from rich.progress import BarColumn,TimeRemainingColumn
+console = Console() # rich library to make your text output be colourful
 
-# console = Console()
+class Timer:
 
-# def countdown_timer(t_seconds, t_session) -> str:
+    def __init__(self, total_duration_of_study_session, pomodoro_duration):
+        self.total_duration_of_study_session = total_duration_of_study_session
+        self.pomodoro_duration = pomodoro_duration
 
-#     """Count down Pomodoro section of my code"""
-
-#     if t_seconds == 25:
-#         study_break = 5*60
-#     else:
-#         study_break = 1*60
-
-#     t_session = (t_session*60) #Total study duration
-
-#     t_minutes = (t_seconds * 60) # Convert the minutes I'll receive into seconds
-
-#     while t_minutes:
-#         for i in track(range(t_minutes,0,-1), description = f"Pomodoro in progress"):
-
-#             mins, secs = divmod(t_minutes, 60) # divmod returns quotient and remainder of the division of the first argument with the second. Returns a tuple.
-#             timer = '{:02d}:{:02d}'.format(mins, secs) 
-
-#             print("Time Left:", timer, end='\r')  # Overwrite the line each second by putting cursor back to the beginning of the line.
-
-#             time.sleep(1) 
-#             t_minutes -=1
-
-
-#     console.print("End of session. ")
-#     print("")
     
-#     notes = input("What have you learnt so far? ")  # I want to store these notes in a json/ csv file. 
+    def study_countdown(self):
+            
+        start = time.monotonic() 
 
-#     print("")
+        print("Time left: ") 
 
-#     while study_break:
-#         # for i in track(range(study_break,0,-1), description="Break (Phumula): "):
-        
-#         break_mins, break_secs = divmod(study_break, 60) # divmod returns quotient and remainder of the division of the first argument with the second. Returns a tuple.
-#         timer = '{:02d}:{:02d}'.format(break_mins, break_secs) 
-        
-#         print("Break (Phumula): ", timer, end='\r')  # Overwrite the line each second by putting cursor back to the beginning of the line.
-        
-#         time.sleep(1) 
+        try: 
+            total_study_session_hours = (self.total_duration_of_study_session*60*60) #Total study duration in seconds
 
-#         study_break -= 1
+            pomodoro_minutes_in_seconds = (self.pomodoro_duration * 60) 
+        except ValueError:
+            print("Only integers are allowed!")
         
-#     return notes 
+
+        # The progress bar
+        with Progress(BarColumn(), TimeRemainingColumn()) as progress: # "With" closes the progress bar automatically once done
+
+            study_session = progress.add_task( total = pomodoro_minutes_in_seconds,description= "Pomodoro in session",)
+            
+            while True:
+                elapsed_time = time.monotonic() - start # Calculates how many seconds it has been
+                if (elapsed_time >= pomodoro_minutes_in_seconds):
+                    progress.update(study_session, completed = pomodoro_minutes_in_seconds) 
+                    break
+                
+                progress.update(study_session, completed = elapsed_time)
+                time.sleep(0.1)      
+                
+
+        console.print("End of session. ") 
+        print("")
+        
+        notes = input("What have you learnt/done so far? ")  # I want to store these notes in a json/ csv file. 
+        print("")
+        return notes 
+        
+
+    def break_countdown(self):
+
+        if (self.pomodoro_duration == 25):
+            study_break = 5*60 # converting min to seconds
+        else:
+            study_break = 10*60 # converting min to seconds
+
+        start_break = time.monotonic()
+
+        print("Break:") 
+
+        try:
+            with Progress(BarColumn(),TimeRemainingColumn()) as progress_break: # With will close the progress bar once I'm done with it automatically
+
+                break_session = progress_break.add_task(description= "Break in progress", total=study_break)
+                
+                while True:
+                    elapsed_time = time.monotonic() - start_break # How many seconds has it been?
+                    if (elapsed_time >= study_break):
+                        progress_break.update( break_session, completed = study_break) 
+                        break
+                    
+                    progress_break.update(break_session, completed=elapsed_time)
+                    time.sleep(0.1)   
+
+            console.print(f"Goodbye!")   
+            
+        except EOFError:
+            console.print("You've terminated your break. Goodbye!")
+        

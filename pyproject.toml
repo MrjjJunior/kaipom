@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kaipom"
+version = "0.1.0"
+authors = [
+  {name = "Amahle Cele", email = "uamahlecele@gmail.com"}
+  ]
+requires-python = ">=3.8"
+maintainers =[
+  {name = "Amahle Cele", email = "uamahlecele@gmail.com"}
+  ]
+description = "Named from joining the two words, Kaizen (Japanese philosophy of continous improvement) & Pomdoro, is command‑line study t that uses the Pomodoro Technique to help you focus, track your learning, and revisit what you’ve studied."
+
+[project.scripts]
+kp = "kaipom:main" 
