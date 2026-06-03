@@ -12,6 +12,10 @@ from rich.progress import BarColumn,TimeRemainingColumn
 import argparse
 from kaipom.timer import Timer
 from kaipom.notes import Notes
+from pathlib import Path
+
+
+home_dir = Path.home()
 
 console =  Console()
 
@@ -67,7 +71,7 @@ def main():
             study_session_dict = {"date": str(namhlanje), "study_duration": f"{args.minutes} minutes", "start_time": start_time, "end_time": end_time, "notes": notes}
             uniq_json = f"{namhlanje}"
 
-            with open(f"/Users/amahlecele/Desktop/kaipom/notes/{uniq_json}-{start_time}.json", "w") as file: # Storing the files in the notes folder
+            with open(f"{home_dir}/Desktop/kaipom/notes/{uniq_json}-{start_time}.json", "w") as file: # Storing the files in the notes folder
                 json.dump(study_session_dict, file)
 
                 break
