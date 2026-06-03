@@ -1,0 +1,2 @@
+[console_scripts]
+kp = kaipom.kp:main
