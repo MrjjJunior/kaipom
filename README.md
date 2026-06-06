@@ -1,6 +1,6 @@
 # kaipom
 
-Made from joining the two words, Kaizen (Japanese philosophy of continous improvement) & Pomodoro, is command‑line study t that uses the Pomodoro Technique to help you focus, track your learning, and revisit what you’ve studied.
+Made from joining the two words, Kaizen (Japanese philosophy of continous improvement) & Pomodoro, is command‑line study tool that uses the Pomodoro Technique to help you focus, track your learning, and revisit what I've learnt.
 
 ## Features
 
@@ -11,11 +11,9 @@ Made from joining the two words, Kaizen (Japanese philosophy of continous improv
 ## Commands
 
 ```bash
-# Start a Pomodoro
-kp study 25 
-
-# Add a note
-study-cli notes --add "Learned about list comprehensions"
+# Start a Pomodoro Session
+kp study 25
+kp study 50
 
 # View notes
 kp notes
