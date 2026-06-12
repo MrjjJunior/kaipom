@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# 1. Get the absolute directory path of this Bash script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+touch kp
+echo python3 "$SCRIPT_DIR/kaipom/kp.py" "$@" > kp
+mv kp 
+
+# 2. Execute the Python script relative to that directory
+python3 "$SCRIPT_DIR/kaipom/kp.py" "$@"
